@@ -65,7 +65,6 @@ def main():
 						done = int(50 * dl / total_length)
 						sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50-done)))
 						sys.stdout.flush()
-			break
 
 if __name__== "__main__":
    main()
