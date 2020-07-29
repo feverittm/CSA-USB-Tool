@@ -17,10 +17,13 @@ def headers(f):
 	return(m_headers)
 
 def bighash(filename):
+	file_hash = hashlib.md5()
 	with open(filename, "rb") as f:
-		file_hash = hashlib.md5()
-		while chunk := f.read(8192):
-			file_hash.update(chunk)
+			while True:
+				buf = f.read(8192)
+				if not buf:
+					break
+				file_hash.update( buf )
 	#print(file_hash.hexdigest())
 	return(file_hash.hexdigest())
 
@@ -51,14 +54,14 @@ def main():
 		else:
 			with open(file_name, "wb") as f:
 				myfile = requests.get(z["URL"], stream=True)
-				total_length = int(myfile.headers.get('content-length'))
-				print(f'\tFile size {total_length}')
+				total_length = myfile.headers.get('content-length')
 
 				if total_length is None:  # no content length header
 					f.write(myfile.content)
 				else:
 					dl = 0
 					total_length = int(total_length)
+					print(f'\tFile size {total_length}')
 					for data in myfile.iter_content(chunk_size=4096):
 						dl += len(data)
 						f.write(data)
